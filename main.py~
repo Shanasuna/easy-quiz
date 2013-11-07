@@ -34,7 +34,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 decorator = OAuth2Decorator(
 	client_id='485793544323-r7jnme7rj0prdo07ml5mcndcbmkcm6du.apps.googleusercontent.com',
         client_secret='QZBgK4wgujNsxhsY_haPJeqO',
-	scope='https://www.googleapis.com/auth/drive'
+	scope='https://www.googleapis.com/auth/admin.directory.group https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/plus.circles.read https://www.googleapis.com/auth/plus.circles.write'
 )
 
 service = build('drive', 'v2')
