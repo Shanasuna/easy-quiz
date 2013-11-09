@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+	<link href='http://fonts.googleapis.com/css?family=Damion' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=ABeeZee' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<div class="row nav-bar">
+	  <div class="col-xs-2 logobar">
+	  	<div class="logo"><a href="/"><img src="images/icons/check.png"> Easy Quiz</a></div>
+	  </div>
+	  <div class="col-xs-10">
+	  	<div>
+	  		<div class="row profile">
+			  	<div class="col-xs-10 right">
+			  		<img src="images/people.png" class="profile-img">
+			  	</div>
+			  	<div class="col-xs-2">
+			  		<div style="font-size:0.8em;">Welcome , </div>
+			  		<div>{{username}}</div>
+			  	</div>
+			  </div>
+		 </div>
+	  </div>
+	</div>
+	<div class="row content">
+	  <div class="col-xs-2 menubar">
+	  	<div>
+	  		<ul>
+		  		<li><a href="Create"><img src="images/icons/plus.png">Create Quiz</a></li>
+		  		<li><img src="images/icons/list.png">My Quiz</li>
+		  		<li><img src="images/icons/checkbox.png">My Score</li>
+		  		<li><img src="images/icons/logout.png">Logout</li>
+	  		</ul>
+	  	</div>
+	  </div>
+	  <div class="col-xs-10">
+	  	<div>
+	  		<div class="block">
+		  		<div class="block-title">My Quiz</div>
+		  		<div class="block-content">
+		  			<div class="row headcol">
+			  			<div class="col-xs-6">Title</div>
+			  			<div class="col-xs-3">Start Date</div>
+			  			<div class="col-xs-3">Action</div>
+		  			</div>
+		  			<div class="row">
+			  			<div class="col-xs-6">1. Java Quiz 1</div>
+			  			<div class="col-xs-3">3 Dec 2013 14.00</div>
+			  			<div class="col-xs-3">Edit | View</div>
+		  			</div>
+		  		</div>
+		  	</div>
+	  	</div>
+	  </div>
+	</div>
+</body>
+</html>
+{% endautoescape %}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+	<link href='http://fonts.googleapis.com/css?family=Damion' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=ABeeZee' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<div class="row nav-bar">
+	  <div class="col-xs-2 logobar">
+	  	<div class="logo"><a href="/"><img src="images/icons/check.png"> Easy Quiz</a></div>
+	  </div>
+	  <div class="col-xs-10">
+	  	<div>
+	  		<div class="row profile">
+			  	<div class="col-xs-10 right">
+			  		<img src="images/people.png" class="profile-img">
+			  	</div>
+			  	<div class="col-xs-2">
+			  		<div style="font-size:0.8em;">Welcome , </div>
+			  		<div>{{username}}</div>
+			  	</div>
+			  </div>
+		 </div>
+	  </div>
+	</div>
+	<div class="row content">
+	  <div class="col-xs-2 menubar">
+	  	<div>
+	  		<ul>
+		  		<li><img src="images/icons/plus.png">Create Quiz</li>
+		  		<li><img src="images/icons/list.png">My Quiz</li>
+		  		<li><img src="images/icons/checkbox.png">My Score</li>
+		  		<li><img src="images/icons/logout.png">Logout</li>
+	  		</ul>
+	  	</div>
+	  </div>
+	  <div class="col-xs-10">
+	  	<div>
+	  		<div class="block">
+		  		<div class="block-title">Create Quiz : Description</div>
+		  		<div class="block-content">
+		  			<div class="add-form">
+		  			<form role="form" method="post" action="/CreateQuizHandler">
+					  <div class="form-group">
+					    <label for="title">Title</label>
+					    <input type="text" class="form-control" id="title" name="title">
+					  </div>
+					  <div class="form-group">
+					    <label for="description">Description</label>
+					    <textarea type="text" class="form-control" id="description" name="description"></textarea>
+					  </div>
+					  <div class="row expand-row">
+						  <div class="col-xs-6">
+						  	<div class="bold">Start Date & Time</div>
+						    <input type="text" class="form-control" id="start_date" name="start_date">
+						  </div>
+						  <div class="col-xs-6">
+						  	<div class="bold">End Date & Time</div>
+						    <input type="text" class="form-control" id="end_date" name="end_date">
+						  </div>
+						</div>
+					  <div class="form-group">
+					    <label for="location">Location</label>
+					    <textarea type="text" class="form-control" id="location" name="location"></textarea>
+					  </div>
+					  <button type="submit" class="btn btn-default">Save</button>
+					</form>
+					</div>
+		  		</div>
+		  	</div>
+
+		  	<div class="block">
+		  		<div class="block-title green">Create Quiz : Question & Answer</div>
+		  		<div class="block-content">
+		  			<div class="add-form">
+		  			<form role="form">
+					  <div class="form-group">
+					    <label for="exampleInputEmail1">Question</label>
+					    <input type="email" class="form-control" id="exampleInputEmail1">
+					  </div>
+					  <div class="form-group">
+					    <label for="exampleInputPassword1">Answer <button type="submit" class="btn btn-default">+</button></label>
+					      <div class="checkbox">
+					        <label>
+					          <input type="checkbox"> <input type="text" class="form-control">
+					        </label>
+					      </div>
+					      <div class="checkbox">
+					        <label>
+					          <input type="checkbox"> <input type="text" class="form-control">
+					        </label>
+					      </div>
+					      <div class="checkbox">
+					        <label>
+					          <input type="checkbox"> <input type="text" class="form-control">
+					        </label>
+					      </div>
+
+					  </div>
+					  <hr>
+					  <button type="submit" class="btn btn-default">Add Question</button>
+					</form>
+					</div>
+		  		</div>
+		  	</div>
+	  	</div>
+	  </div>
+	</div>
+</body>
+</html>
+{% endautoescape %}

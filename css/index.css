@@ -1,0 +1,162 @@
+div {
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
+}
+
+html, body {
+	overflow-x:hidden;
+	min-height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #000;
+}
+
+a:visited {
+	color: #000;
+}
+
+a:hover {
+	color: #000;
+	text-decoration: none;
+}
+
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
+
+.nav-bar {
+	background-color: #36A9E1;
+}
+
+.nav-bar .profile .profile-img {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	margin: -3px -15px -15px 0;
+}
+
+.nav-bar .profile {
+	color: #FFF;
+	font-family: 'ABeeZee', sans-serif;
+}
+
+.nav-bar .profile .name {
+
+}  
+
+.nav-bar > div >div {
+	padding: 1em;
+}
+.nav-bar > .logobar {
+	background-color: #1E8FC6;
+	font-size: 1.4em;
+	color: #FFF;
+	font-family: 'Damion', cursive;
+}
+
+.nav-bar > .logobar img {
+	width: 32px;
+	height: 32px;
+	margin-top: -10px;
+}
+
+.nav-bar > .logobar a {
+	color: #FFF;
+}
+
+.content {
+	min-height: 100%;
+	background-color: #F5F5F5;
+}
+.content > div > div {
+	padding-left: -1em;
+	padding-right: 1em;
+	margin-top: 0.5em;
+}
+
+.menubar {
+	background-color: #383E4B;
+	min-height: 100%;
+	height: 100%;
+}
+
+.menubar ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.menubar ul > li {
+	margin-left: -1em;
+	margin-right: -2em;
+	margin-bottom: 0.3em;
+	padding: 1em 2em;
+	color: #FFF;
+}
+.menubar a {
+	color: #FFF;
+}
+
+.menubar ul > li:hover {
+	background-color: #2D323D;
+}
+.menubar ul > li img {
+	width: 24px;
+	height: 24px;
+	margin-right: 0.75em;
+}
+
+
+.block {
+	background-color: #FFF;
+	margin-top: 1.5em;
+	margin-left: 15px;
+}
+
+.block .block-title {
+	background-color: #36A9E1;
+	padding: 0.5em 1.5em;
+	font-size: 1.2em;
+	color: #FFF;
+	border-bottom: 2px solid #1E8FC6;
+}
+
+.block .block-title.green {
+	background-color: #2ecc71;
+	border-bottom: 2px solid #27ae60;
+}
+
+.block .block-content > div {
+	padding: 0.4em;
+}
+
+.block .block-content .headcol {
+	background-color: #1E8FC6;
+	font-size: 0.8em;
+}
+
+.block .block-content .odd-item {
+
+}
+
+.block .block-content .add-form {
+	padding: 1.5em;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.expand-row {
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-bottom: 15px;
+}
