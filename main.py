@@ -182,13 +182,61 @@ class ModifyQuizHandler(webapp2.RequestHandler):
 		con.close()
 
 		result = {
-				'status' : 'OK',
-				'id' : str(zid)
-			}
+			'status' : 'OK',
+			'id' : str(zid)
+		}
 
 		self.response.write(json.dumps(result))
 
 		#self.redirect('/')
+
+class ManageQuestionHandler(webapp2.RequestHandler):
+	@decorator.oauth_required
+   	def post(self):
+		# zid = self.request.get('id')
+		# title = self.request.get('title')
+		# description = self.request.get('description')
+		# start_date = self.request.get('start')
+		# end_date = self.request.get('end')
+		# location = self.request.get('location')
+
+		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
+    		cursor = con.cursor()
+
+		zid = self.request.get('id')
+		data = json.loads(self.request.get('data'))
+
+		sql = "delete from Question where quiz_id='%s'"%(zid)
+		cursor.execute(sql)
+		con.commit()
+		sql = "delete from Answer where quiz_id='%s'"%(zid)
+		cursor.execute(sql)
+		con.commit()
+
+		for q in data:
+			question = q['question']
+			sql = "insert into Question (quiz_id, description) values ('%s', '%s')"%(zid, question)
+			cursor.execute(sql)
+			con.commit()
+			
+			sql = "select id from Question where quiz_id='%s' and description='%s' order by id desc limit 1"%(zid, question)
+			cursor.execute(sql)
+			qid = cursor.fetchall()[0][0]
+
+			answer = q['answer']
+			for a in answer:
+				ans = a['answer']
+				istrue = a['istrue']
+				sql = "insert into Answer (quiz_id, question_id, title, is_true) values ('%s', '%s', '%s', %r)"%(zid, qid, ans, istrue)
+				cursor.execute(sql)
+				con.commit()
+
+
+		result = {
+			'status' : 'OK',
+		}
+
+		self.response.write(json.dumps(result))
 
 class Quiz(webapp2.RequestHandler):
 	@decorator.oauth_required
@@ -211,6 +259,7 @@ app = webapp2.WSGIApplication([
 	('/CreateQuizHandler', CreateQuizHandler),
 	('/ModifyQuiz', ModifyQuiz),
 	('/ModifyQuizHandler', ModifyQuizHandler),
+	('/ManageQuestionHandler', ManageQuestionHandler),
 	(decorator.callback_path, decorator.callback_handler())
 ], debug=True)
 app = SessionMiddleware(app, cookie_key=str(os.urandom(64)))

@@ -125,7 +125,9 @@ function SendModifyEventData() {
 		type : "POST",
 		url : "/ModifyQuizHandler",
 		context : this,
-		data : { 'data' : JSON.stringify(event_data) },	
+		data : {
+			'data' : JSON.stringify(event_data)
+		},	
 		cache : false,
 		success: function(result) {
 			alert(result);
@@ -136,6 +138,7 @@ function SendModifyEventData() {
 }
 
 function SendQuestionData() {
+	var id = $("#input-id").val();
 	question_data = [];
 	$(".inputQuestion").each(function() {
 		var topic = $(this).attr("topic");
@@ -163,9 +166,12 @@ function SendQuestionData() {
 
 	var ajax = $.ajax({
 		type : "POST",
-		url : "...",
+		url : "/ManageQuestionHandler",
 		context : this,
-		data : JSON.stringify(question_data),	
+		data : {
+			'id' : id,
+			'data' : JSON.stringify(question_data)
+		},	
 		cache : false,
 		success: function(result) {
 			alert(result);
