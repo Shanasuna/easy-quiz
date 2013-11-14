@@ -18,6 +18,7 @@
 import webapp2
 import os
 import jinja2
+import json
 from google.appengine.api import rdbms
 from google.appengine.api import users
 from apiclient.discovery import build
@@ -98,20 +99,39 @@ class CreateQuiz(webapp2.RequestHandler):
 class CreateQuizHandler(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def post(self):
-		title = self.request.get('title')
-		description = self.request.get('description')
-		start_date = self.request.get('start')
-		end_date = self.request.get('end')
-		location = self.request.get('location')
+		# title = self.request.get('title')
+		# description = self.request.get('description')
+		# start_date = self.request.get('start')
+		# end_date = self.request.get('end')
+		# location = self.request.get('location')
+
+		data = json.loads(self.request.get('data'))
+		title = data['title']
+		description = data['description']
+		start_date = data['startdate']
+		end_date = data['enddate']
+		location = data['location']
 
 		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
     		cursor = con.cursor()
         	sql="insert into Quiz (title, description, start, end, address, owner) values ('%s', '%s', '%s', '%s', '%s', '%s')"%(title, description, start_date, end_date, location, users.get_current_user().email().lower())
     		cursor.execute(sql)
 		con.commit()
+
+		sql="select id from Quiz where title='%s' and description='%s' and owner='%s' order by id desc limit 1"%(title, description, users.get_current_user().email().lower())
+		cursor.execute(sql)
+		zid = cursor.fetchall()[0][0]
+
 		con.close()
 
-		self.redirect('/')
+		result = {
+				'status' : 'OK',
+				'id' : str(zid)
+			}
+
+		self.response.write(json.dumps(result))
+
+		#self.redirect("/ModifyQuiz?id=" + zid)
 
 class ModifyQuiz(webapp2.RequestHandler):
 	@decorator.oauth_required
@@ -139,12 +159,20 @@ class ModifyQuiz(webapp2.RequestHandler):
 class ModifyQuizHandler(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def post(self):
-		zid = self.request.get('id')
-		title = self.request.get('title')
-		description = self.request.get('description')
-		start_date = self.request.get('start')
-		end_date = self.request.get('end')
-		location = self.request.get('location')
+		# zid = self.request.get('id')
+		# title = self.request.get('title')
+		# description = self.request.get('description')
+		# start_date = self.request.get('start')
+		# end_date = self.request.get('end')
+		# location = self.request.get('location')
+
+		data = json.loads(self.request.get('data'))
+		zid = data['id']
+		title = data['title']
+		description = data['description']
+		start_date = data['startdate']
+		end_date = data['enddate']
+		location = data['location']
 
 		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
     		cursor = con.cursor()
@@ -153,7 +181,14 @@ class ModifyQuizHandler(webapp2.RequestHandler):
 		con.commit()
 		con.close()
 
-		self.redirect('/')
+		result = {
+				'status' : 'OK',
+				'id' : str(zid)
+			}
+
+		self.response.write(json.dumps(result))
+
+		#self.redirect('/')
 
 class Quiz(webapp2.RequestHandler):
 	@decorator.oauth_required

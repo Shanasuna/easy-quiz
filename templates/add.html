@@ -5,7 +5,19 @@
 	<link href='http://fonts.googleapis.com/css?family=Damion' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=ABeeZee' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-wysihtml5.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+	<script type="text/javascript" src="js/json2.js"></script>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;language=en"></script>
+	<script type="text/javascript" src="js/wysihtml5-0.3.0.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/moment.min.js"></script>
+	<script type="text/javascript" src="js/gmap3.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-wysihtml5.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="js/add.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -44,30 +56,31 @@
 		  		<div class="block-title">Create Quiz : Description</div>
 		  		<div class="block-content">
 		  			<div class="add-form">
-		  			<form role="form" method="post" action="/CreateQuizHandler">
+		  			<form role="form">
 					  <div class="form-group">
-					    <label for="title">Title</label>
-					    <input type="text" class="form-control" id="title" name="title">
+					    <label for="exampleInputEmail1">Title</label>
+					    <input type="text" class="form-control"  id="input-title">
 					  </div>
 					  <div class="form-group">
-					    <label for="description">Description</label>
-					    <textarea type="text" class="form-control" id="description" name="description"></textarea>
+					    <label for="exampleInputPassword1">Description</label>
+					    <textarea type="text" class="form-control" id="input-description"></textarea>
 					  </div>
 					  <div class="row expand-row">
 						  <div class="col-xs-6">
 						  	<div class="bold">Start Date & Time</div>
-						    <input type="text" class="form-control" id="start" name="start">
+						   <input type="text" id="input-startdate" class="form-control">
 						  </div>
 						  <div class="col-xs-6">
 						  	<div class="bold">End Date & Time</div>
-						    <input type="text" class="form-control" id="end" name="end">
+						    <input type="text" id="input-enddate" class="form-control">
 						  </div>
 						</div>
 					  <div class="form-group">
-					    <label for="location">Location</label>
-					    <textarea type="text" class="form-control" id="location" name="location"></textarea>
+					    <label for="exampleInputPassword1">Location</label>
+					    <textarea type="text" class="form-control" id="input-location"></textarea>
 					  </div>
-					  <button type="submit" class="btn btn-default">Save</button>
+					  <div id="point-location" style="height:200px;width:100%; margin-bottom:10px;"></div>
+					  <button type="submit" id="save-event-button" class="btn btn-default">Save</button>
 					</form>
 					</div>
 		  		</div>
@@ -78,31 +91,9 @@
 		  		<div class="block-content">
 		  			<div class="add-form">
 		  			<form role="form">
-					  <div class="form-group">
-					    <label for="exampleInputEmail1">Question</label>
-					    <input type="email" class="form-control" id="exampleInputEmail1">
-					  </div>
-					  <div class="form-group">
-					    <label for="exampleInputPassword1">Answer <button type="submit" class="btn btn-default">+</button></label>
-					      <div class="checkbox">
-					        <label>
-					          <input type="checkbox"> <input type="text" class="form-control">
-					        </label>
-					      </div>
-					      <div class="checkbox">
-					        <label>
-					          <input type="checkbox"> <input type="text" class="form-control">
-					        </label>
-					      </div>
-					      <div class="checkbox">
-					        <label>
-					          <input type="checkbox"> <input type="text" class="form-control">
-					        </label>
-					      </div>
-
-					  </div>
-					  <hr>
-					  <button type="submit" class="btn btn-default">Add Question</button>
+					  <div id="question-section"></div>
+					 
+					  <button type="submit" id="add-question-button" class="btn btn-default">Add Question</button>&nbsp;<button type="submit" id="save-question-button" class="btn btn-default">Save All</button>
 					</form>
 					</div>
 		  		</div>
