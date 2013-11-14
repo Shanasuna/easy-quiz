@@ -227,7 +227,7 @@ class ManageQuestionHandler(webapp2.RequestHandler):
 			for a in answer:
 				ans = a['answer']
 				istrue = a['istrue']
-				sql = "insert into Answer (quiz_id, question_id, title, is_true) values ('%s', '%s', '%s', '%r')"%(zid, qid, ans, istrue)
+				sql = "insert into Answer (quiz_id, question_id, title, is_true) values ('%s', '%s', '%s', %r)"%(zid, qid, ans, istrue)
 				cursor.execute(sql)
 				con.commit()
 
@@ -241,10 +241,49 @@ class ManageQuestionHandler(webapp2.RequestHandler):
 class Quiz(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def get(self):
-        	templates = {			
+		zid = self.request.get('id')
+
+		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
+    		cursor = con.cursor()
+
+		sql="select title, description from Quiz where id='%s'"%(zid)
+		cursor.execute(sql)
+		row = cursor.fetchall()[0]
+		title = row[0]
+		description = row[1]
+
+		sql = "select id, description from Question where quiz_id='%s'"%(zid)
+		cursor.execute(sql)
+		question_data = cursor.fetchall()
+		questions = []
+		for q in question_data:
+			sql = "select id, title, is_true from Answer where question_id='%s'"%(q[0])
+			cursor.execute(sql)
+			answer_data = cursor.fetchall()
+			answers = []
+			for a in answer_data:
+				answer = {
+					'id' : a[0],
+					'title' : a[1],
+					'is_true' : a[2]
+				}
+				answers.append(answer)
+
+			question = {
+				'id' : q[0],
+				'title' : q[1],
+				'answers' : answers
+			}
+			questions.append(question)
+
+        	templates = {
+			'title' : title,
+			'description' : description,
+			'questions' : questions
 		}
-		get_template = JINJA_ENVIRONMENT.get_template('main.html')
-		self.response.write(get_template.render(templates))
+		self.response.write(json.dumps(templates))
+		#get_template = JINJA_ENVIRONMENT.get_template('templates/quiz.html')
+		#self.response.write(get_template.render(templates))
 
 class Test(webapp2.RequestHandler):
 	@decorator.oauth_required
@@ -260,6 +299,7 @@ app = webapp2.WSGIApplication([
 	('/ModifyQuiz', ModifyQuiz),
 	('/ModifyQuizHandler', ModifyQuizHandler),
 	('/ManageQuestionHandler', ManageQuestionHandler),
+	('/Quiz', Quiz),
 	(decorator.callback_path, decorator.callback_handler())
 ], debug=True)
 app = SessionMiddleware(app, cookie_key=str(os.urandom(64)))

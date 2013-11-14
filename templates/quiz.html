@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+	
+</head>
+<body>
+	<div>Title: {{ title }}</div>
+	<div>Description: {{ description }}</div>
+	<ul>
+		{% for row in questions %}
+		<li>
+			<div>Question {{ loop.index }}. : {{ row.title }}</div>
+			<div>Answer</div>
+			<ul>
+				{% for row2 in row.answers %}
+				<li>
+					<div>{{ row2.title }}</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</li>
+		{% endfor %}
+	</ul>
+</body>
+</html>
+{% endautoescape %}
