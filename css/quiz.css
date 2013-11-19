@@ -1,0 +1,16 @@
+.quiz {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.quiz ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+
+}
+
+.quiz ul li , .quiz li{
+	padding: 0.5em;
+}

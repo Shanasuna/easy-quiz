@@ -29,7 +29,7 @@ function AddQuestion() {
 					      </div>\
 					  </div><hr>';
 	$("#question-section").append(question_area);
-	$(".inputQuestion[topic='" + q_no + "']").wysihtml5();
+	$(".inputQuestion[topic='" + q_no + "']").summernote();
 
 	ans_no[q_no] = 1;
 	$(".add-answer-button[topic='" + q_no + "']").click(function() {

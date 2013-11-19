@@ -40,8 +40,8 @@ INSTANCE_NAME = "gcdc2013-easyquiz:quiz1"
 DATABASE = "quizdb"
 
 decorator = OAuth2Decorator(
-	client_id='981805140817.apps.googleusercontent.com',
-        client_secret='YT2KhOg3nPgXUeV60wA3iAwS',
+	client_id='811273628883-maqeqibrglovtamcnv6jdvijsfs5go2m.apps.googleusercontent.com',
+        client_secret='ON_nhoYc613SI2WUJlHE8wL6',
 	scope='https://www.googleapis.com/auth/drive'
 )
 
@@ -290,16 +290,38 @@ class Test(webapp2.RequestHandler):
    	def get(self):
         	test_func(self, 1, 2)
 
+class AnsQuiz(webapp2.RequestHandler):
+	@decorator.oauth_required
+   	def post(self): 
+   			con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
+    		cursor = con.cursor()
+   			val = self.request.get('ans')
+   			data = json.loads(val)
+   			for ans in data:
+   				ans['quiz'] = ans['quiz'].replace('quiz', '')
+   				sql="select * from Answer where id='%s'"%(ans['quiz'])
+		    	cursor.execute(sql)
+				quiz = cursor.fetchall()
+
+   				print ans['quiz']
+   				print ans['ans']
+
+
+   			self.response.write(val)
+
+
+
 
 app = webapp2.WSGIApplication([
 	('/Test', Test),
-    	('/', Main),
+    ('/', Main),
 	('/Create', CreateQuiz),
 	('/CreateQuizHandler', CreateQuizHandler),
 	('/ModifyQuiz', ModifyQuiz),
 	('/ModifyQuizHandler', ModifyQuizHandler),
 	('/ManageQuestionHandler', ManageQuestionHandler),
 	('/Quiz', Quiz),
+	('/AnsQuiz', AnsQuiz),
 	(decorator.callback_path, decorator.callback_handler())
 ], debug=True)
 app = SessionMiddleware(app, cookie_key=str(os.urandom(64)))

@@ -3,25 +3,104 @@
 <html>
 <head>
 	
+	<link href='http://fonts.googleapis.com/css?family=Damion' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=ABeeZee' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="stylesheet" type="text/css" href="css/quiz.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+	<script type="text/javascript" src="js/json2.js"></script>
 </head>
 <body>
-	<div>Title: {{ title }}</div>
-	<div>Description: {{ description }}</div>
-	<ul>
-		{% for row in questions %}
-		<li>
-			<div>Question {{ loop.index }}. : {{ row.title }}</div>
-			<div>Answer</div>
-			<ul>
-				{% for row2 in row.answers %}
-				<li>
-					<div>{{ row2.title }}</div>
-				</li>
-				{% endfor %}
-			</ul>
-		</li>
-		{% endfor %}
-	</ul>
+	<div class="row nav-bar">
+	  <div class="col-xs-2 logobar">
+	  	<div class="logo"><a href="/"><img src="images/icons/check.png"> Easy Quiz</a></div>
+	  </div>
+	  <div class="col-xs-10">
+	  	<div>
+	  		<div class="row profile">
+			  	<div class="col-xs-10 right">
+			  		<img src="images/people.png" class="profile-img">
+			  	</div>
+			  	<div class="col-xs-2">
+			  		<div style="font-size:0.8em;">Welcome , </div>
+			  		<div>{{username}}</div>
+			  	</div>
+			  </div>
+		 </div>
+	  </div>
+	</div>
+	<div class="row content">
+	  <div class="col-xs-2 menubar">
+	  	<div>
+	  		<ul>
+		  		<li><a href="Create"><img src="images/icons/plus.png">Create Quiz</a></li>
+		  		<li><img src="images/icons/list.png">My Quiz</li>
+		  		<li><img src="images/icons/checkbox.png">My Score</li>
+		  		<li><img src="images/icons/logout.png">Logout</li>
+	  		</ul>
+	  	</div>
+	  </div>
+	  <div class="col-xs-10">
+	  	<div>
+	  		<div class="block">
+		  		<div class="block-title">{{ title }}</div>
+		  		<div class="block-content">
+				<div>{{ description }}</div>
+				<hr>
+				<form action="/AnsQuiz" id="ansquiz" method="POST">
+					<ul>
+						{% for row in questions %}
+						<li class="quiz">
+							<div>Question {{ loop.index }}. : {{ row.title }}</div>
+							<ul>
+								{% for row2 in row.answers %}
+								<li>
+									<div><input type="radio" name="quiz{{row.id}}" value="{{ row2.id }}"> {{ row2.title }}</div>
+								</li>
+								{% endfor %}
+							</ul>
+							<hr>
+						</li>
+						{% endfor %}
+						<li>
+							<input type="submit" value="Submit Quiz" class="btn">
+						</li>
+					</ul>
+				</form>
+		  	</div>
+	  	</div>
+	  </div>
+	</div>
 </body>
 </html>
+<script type="text/javascript">
+	$(function() {
+		$("#ansquiz").submit(function() {
+			var data = [];
+			$("#ansquiz input[type='radio']:checked").each(function() {
+				var ans = { 
+					"quiz" : $(this).attr("name"),
+					"ans" : $(this).val() 
+				};
+				data.push(ans);
+			});
+
+			$.ajax({
+				url : "AnsQuiz",
+				type: "POST",
+				cache: false,
+				context: this,
+				data : {
+					"ans" : JSON.stringify(data)
+				},
+				success: function(result) {
+					console.log(result)
+				}
+			})
+			return false;
+		});
+	});
+</script>
 {% endautoescape %}
