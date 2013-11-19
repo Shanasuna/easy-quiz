@@ -55,26 +55,7 @@ MIME_PRESENT = "application/vnd.google-apps.presentation"
 class Main(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def get(self):
-		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
-    		cursor = con.cursor()
-		sql="select * from User where email='%s'"%(users.get_current_user().email().lower())
-		cursor.execute(sql)
-		row = cursor.fetchall()
-		if not row:
-			body = {
-	    			'title': "Easy Quiz",
-	    			'description': "EQ Description",
-	    			'mimeType': MIME_FOLDER
-	  		}
-			#result = insert_file(self, service, "Easy Quiz", "EQ Description", "", MIME_FOLDER, "")
-			#file = service.files().insert(body=body).execute(http=decorator.http)
-			#self.response.write("Self Link: " + result['selfLink'])
-			#self.response.write("WebContent Link: " + result['webContentLink'])
-			#self.response.write("WebView Link: " + result['webViewLink'])
-			#self.response.write("Alternate Link: " + result['alternateLink'])
-		#else:
-			#self.response.write("Registered")
-
+		checkLogin()
         	sql="select id, title, start from Quiz where owner=lower('%s') order by id asc"%(users.get_current_user().email().lower())
     		cursor.execute(sql)
 		quiz = cursor.fetchall()
@@ -90,6 +71,7 @@ class Main(webapp2.RequestHandler):
 class CreateQuiz(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def get(self):
+		checkLogin()
         	templates = {
 			'username' : users.get_current_user()		
 		}
@@ -99,6 +81,7 @@ class CreateQuiz(webapp2.RequestHandler):
 class CreateQuizHandler(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def post(self):
+		checkLogin()
 		# title = self.request.get('title')
 		# description = self.request.get('description')
 		# start_date = self.request.get('start')
@@ -136,6 +119,7 @@ class CreateQuizHandler(webapp2.RequestHandler):
 class ModifyQuiz(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def get(self):
+		checkLogin()
 		zid = self.request.get('id')
 		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
     		cursor = con.cursor()
@@ -159,6 +143,7 @@ class ModifyQuiz(webapp2.RequestHandler):
 class ModifyQuizHandler(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def post(self):
+		checkLogin()
 		# zid = self.request.get('id')
 		# title = self.request.get('title')
 		# description = self.request.get('description')
@@ -193,6 +178,7 @@ class ModifyQuizHandler(webapp2.RequestHandler):
 class ManageQuestionHandler(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def post(self):
+		checkLogin()
 		# zid = self.request.get('id')
 		# title = self.request.get('title')
 		# description = self.request.get('description')
@@ -241,6 +227,7 @@ class ManageQuestionHandler(webapp2.RequestHandler):
 class Quiz(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def get(self):
+		checkLogin()
 		zid = self.request.get('id')
 
 		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
@@ -293,28 +280,27 @@ class Test(webapp2.RequestHandler):
 class AnsQuiz(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def post(self): 
-   			con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
+		checkLogin()
+		session = get_current_session()
+   		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
     		cursor = con.cursor()
-   			val = self.request.get('ans')
-   			data = json.loads(val)
-   			for ans in data:
-   				ans['quiz'] = ans['quiz'].replace('quiz', '')
-   				sql="select * from Answer where id='%s'"%(ans['quiz'])
-		    	cursor.execute(sql)
-				quiz = cursor.fetchall()
+   		val = self.request.get('ans')
+   		data = json.loads(val)
+   		for ans in data:
+   			ans['question'] = ans['question'].replace('question', '')
+			sql="select q.quiz_id, a.id, a.is_true from Question q, Answer a where q.id='%s' and a.question_id='%s' and a.id='%s'"%(ans['question'], ans['question'], ans['ans'])
+			cursor.execute(sql)
+			row = cursor.fetchall()[0]
+			sql="insert into AnsDB (quiz_id, question_id, ans_id, user_id, istrue) values ('%s', '%s', '%s', '%s', '%s')"%(row[0], ans['question'], row[1], str(session['user_id']), row[2])
+			cursor.execute(sql)
+			con.commit()
 
-   				print ans['quiz']
-   				print ans['ans']
-
-
-   			self.response.write(val)
-
-
+		self.response.write(val + ", UserID: " + str(session['user_id']))
 
 
 app = webapp2.WSGIApplication([
 	('/Test', Test),
-    ('/', Main),
+    	('/', Main),
 	('/Create', CreateQuiz),
 	('/CreateQuizHandler', CreateQuizHandler),
 	('/ModifyQuiz', ModifyQuiz),
@@ -348,3 +334,31 @@ def insert_file(self, service, title, description, parent_id, mime_type, filenam
 def test_func(self, a, b):
 	self.response.write(str(int(a)+int(b)))
 
+def checkLogin():
+	session = get_current_session()
+	con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
+	cursor = con.cursor()
+	sql="select * from User where email='%s'"%(users.get_current_user().email().lower())
+	cursor.execute(sql)
+	row = cursor.fetchall()
+	if not row:
+		body = {
+    			'title': "Easy Quiz",
+    			'description': "EQ Description",
+    			'mimeType': MIME_FOLDER
+  		}
+    		sql="insert into User (email, name) values ('%s', '%s')"%(users.get_current_user().email().lower(), users.get_current_user().nickname())
+		cursor.execute(sql)
+		con.commit()
+		#result = insert_file(self, service, "Easy Quiz", "EQ Description", "", MIME_FOLDER, "")
+		#file = service.files().insert(body=body).execute(http=decorator.http)
+		#self.response.write("Self Link: " + result['selfLink'])
+		#self.response.write("WebContent Link: " + result['webContentLink'])
+		#self.response.write("WebView Link: " + result['webViewLink'])
+		#self.response.write("Alternate Link: " + result['alternateLink'])
+	#else:
+		#self.response.write("Registered")
+
+	sql="select id from User where email='%s' limit 1"%(users.get_current_user().email().lower())
+	cursor.execute(sql)
+	session['user_id'] = cursor.fetchall()[0][0]

@@ -57,7 +57,7 @@
 							<ul>
 								{% for row2 in row.answers %}
 								<li>
-									<div><input type="radio" name="quiz{{row.id}}" value="{{ row2.id }}"> {{ row2.title }}</div>
+									<div><input type="radio" name="question{{row.id}}" value="{{ row2.id }}"> {{ row2.title }}</div>
 								</li>
 								{% endfor %}
 							</ul>
@@ -69,6 +69,7 @@
 						</li>
 					</ul>
 				</form>
+				<input type="hidden" value="{{ quiz_id }}" id="input_quiz_id" class="btn">
 		  	</div>
 	  	</div>
 	  </div>
@@ -81,12 +82,12 @@
 			var data = [];
 			$("#ansquiz input[type='radio']:checked").each(function() {
 				var ans = { 
-					"quiz" : $(this).attr("name"),
+					"question" : $(this).attr("name"),
 					"ans" : $(this).val() 
 				};
 				data.push(ans);
 			});
-
+			console.log(JSON.stringify(data));
 			$.ajax({
 				url : "AnsQuiz",
 				type: "POST",
