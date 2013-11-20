@@ -6,7 +6,9 @@ $(function() {
 
 
 function Main() {
-	$("#input-startdate , #input-enddate").datetimepicker();
+	$("#input-startdate , #input-enddate").datetimepicker({
+		format:'YYYY-MM-DD HH:mm'
+	});
 	Map();
 	$("#add-question-button").click(function() {
 		AddQuestion();

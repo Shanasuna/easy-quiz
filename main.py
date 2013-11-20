@@ -19,6 +19,7 @@ import webapp2
 import os
 import jinja2
 import json
+from datetime import datetime, timedelta
 from google.appengine.api import rdbms
 from google.appengine.api import users
 from apiclient.discovery import build
@@ -56,6 +57,8 @@ class Main(webapp2.RequestHandler):
 	@decorator.oauth_required
    	def get(self):
 		checkLogin()
+		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
+    		cursor = con.cursor()
         	sql="select id, title, start from Quiz where owner=lower('%s') order by id asc"%(users.get_current_user().email().lower())
     		cursor.execute(sql)
 		quiz = cursor.fetchall()
@@ -233,11 +236,22 @@ class Quiz(webapp2.RequestHandler):
 		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
     		cursor = con.cursor()
 
-		sql="select title, description from Quiz where id='%s'"%(zid)
+		sql="select title, description, start, end from Quiz where id='%s'"%(zid)
 		cursor.execute(sql)
 		row = cursor.fetchall()[0]
 		title = row[0]
 		description = row[1]
+		start = row[2]
+		end = row[3]
+
+		now = datetime.utcnow() + timedelta(hours=7)
+
+		if now < start:
+			self.response.write("Quiz doesn't begin")
+			return
+		elif now > end:
+			self.response.write("Quiz ended")
+			return
 
 		sql = "select id, description from Question where quiz_id='%s'"%(zid)
 		cursor.execute(sql)
