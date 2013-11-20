@@ -41,8 +41,8 @@ INSTANCE_NAME = "gcdc2013-easyquiz:quiz1"
 DATABASE = "quizdb"
 
 decorator = OAuth2Decorator(
-	client_id='811273628883-maqeqibrglovtamcnv6jdvijsfs5go2m.apps.googleusercontent.com',
-        client_secret='ON_nhoYc613SI2WUJlHE8wL6',
+	client_id='981805140817.apps.googleusercontent.com',
+        client_secret='YT2KhOg3nPgXUeV60wA3iAwS',
 	scope='https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/calendar'
 )
 
@@ -342,7 +342,7 @@ app = webapp2.WSGIApplication([
 ], debug=True)
 app = SessionMiddleware(app, cookie_key=str(os.urandom(64)))
 
-def insert_file(self, service, title, description, parent_id, mime_type, filename):
+def insert_file(service, title, description, parent_id, mime_type, filename):
   	#media_body = MediaFileUpload(filename, mimetype=mime_type, resumable=True)
   	body = {
     		'title': title,
@@ -372,12 +372,8 @@ def checkLogin():
 	cursor.execute(sql)
 	row = cursor.fetchall()
 	if not row:
-		body = {
-    			'title': "Easy Quiz",
-    			'description': "EQ Description",
-    			'mimeType': MIME_FOLDER
-  		}
-    		sql="insert into User (email, name) values ('%s', '%s')"%(users.get_current_user().email().lower(), users.get_current_user().nickname())
+		file = insert_file(service, "Easy Quiz", "Test Create Folder", "", MIME_FOLDER, "Easy Quiz")
+    		sql="insert into User (email, name, drive_url) values ('%s', '%s', '%s')"%(users.get_current_user().email().lower(), users.get_current_user().nickname())
 		cursor.execute(sql)
 		con.commit()
 		#result = insert_file(self, service, "Easy Quiz", "EQ Description", "", MIME_FOLDER, "")

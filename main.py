@@ -342,7 +342,7 @@ app = webapp2.WSGIApplication([
 ], debug=True)
 app = SessionMiddleware(app, cookie_key=str(os.urandom(64)))
 
-def insert_file(self, service, title, description, parent_id, mime_type, filename):
+def insert_file(service, title, description, parent_id, mime_type, filename):
   	#media_body = MediaFileUpload(filename, mimetype=mime_type, resumable=True)
   	body = {
     		'title': title,
@@ -372,12 +372,8 @@ def checkLogin():
 	cursor.execute(sql)
 	row = cursor.fetchall()
 	if not row:
-		body = {
-    			'title': "Easy Quiz",
-    			'description': "EQ Description",
-    			'mimeType': MIME_FOLDER
-  		}
-    		sql="insert into User (email, name) values ('%s', '%s')"%(users.get_current_user().email().lower(), users.get_current_user().nickname())
+		file_result = insert_file(service, "Easy Quiz", "Test Create Folder", "", MIME_FOLDER, "Easy Quiz")
+    		sql="insert into User (email, name, drive_url) values ('%s', '%s', '%s')"%(users.get_current_user().email().lower(), users.get_current_user().nickname(), file_result['alternateLink'])
 		cursor.execute(sql)
 		con.commit()
 		#result = insert_file(self, service, "Easy Quiz", "EQ Description", "", MIME_FOLDER, "")
