@@ -41,8 +41,8 @@ INSTANCE_NAME = "gcdc2013-easyquiz:quiz1"
 DATABASE = "quizdb"
 
 decorator = OAuth2Decorator(
-	client_id='981805140817.apps.googleusercontent.com',
-        client_secret='YT2KhOg3nPgXUeV60wA3iAwS',
+	client_id='808381301213-rgl6qcaiabgqtg58aihcmth32ud9purv.apps.googleusercontent.com',
+        client_secret='l7T9EGbQ4q9tfhRvRLm4VB0D',
 	scope='https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/calendar'
 )
 
@@ -316,17 +316,108 @@ class AnsQuiz(webapp2.RequestHandler):
     		cursor = con.cursor()
    		val = self.request.get('ans')
    		data = json.loads(val)
+		correct = 0
+		incorrect = 0
+		quiz_id = -1
    		for ans in data:
    			ans['question'] = ans['question'].replace('question', '')
 			sql="select q.quiz_id, a.id, a.is_true from Question q, Answer a where q.id='%s' and a.question_id='%s' and a.id='%s'"%(ans['question'], ans['question'], ans['ans'])
 			cursor.execute(sql)
 			row = cursor.fetchall()[0]
 			sql="insert into AnsDB (quiz_id, question_id, ans_id, user_id, istrue) values ('%s', '%s', '%s', '%s', '%s')"%(row[0], ans['question'], row[1], str(session['user_id']), row[2])
+			quiz_id = row[0]
 			cursor.execute(sql)
 			con.commit()
+			if row[2] == True:
+				correct += 1
+			else:
+				incorrect += 1
 
-		self.response.write(val + ", UserID: " + str(session['user_id']))
+		self.response.write("y=" + str(correct) + "&n=" + str(incorrect) + "&id=" + str(quiz_id))
 
+class QuizResult(webapp2.RequestHandler):
+	@decorator.oauth_required
+   	def get(self):
+		qid = self.request.get('id')
+		correct = self.request.get('y')
+		incorrect = self.request.get('n')
+
+		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
+    		cursor = con.cursor()
+
+		sql="select title, description from Quiz where id='%s'"%(qid)
+		cursor.execute(sql)
+		row = cursor.fetchall()[0]
+		title = row[0]
+		description = row[1]
+
+		self.response.headers["Content-Type"] = "text/html"
+		self.response.write("Quiz: " + title + "<br>")
+		self.response.write("Description" + description + "<br><br>")
+		self.response.write("Number of questions: " + str(int(correct)+int(incorrect)) + " questions<br>")
+		self.response.write("Corrected: " + str(correct) + "<br>")
+		self.response.write("Incorrected: " + str(incorrect) + "<br>")
+
+class QuizSummary(webapp2.RequestHandler):
+	#@decorator.oauth_required
+   	def get(self):
+		zid = self.request.get('id')
+
+		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
+    		cursor = con.cursor()
+
+		sql="select title, description, start, end from Quiz where id='%s'"%(zid)
+		cursor.execute(sql)
+		row = cursor.fetchall()[0]
+		title = row[0]
+		description = row[1]
+		start = row[2]
+		end = row[3]
+
+		#now = datetime.utcnow() + timedelta(hours=7)
+
+		#if now < start:
+		#	self.response.write("Quiz doesn't begin")
+		#	return
+		#elif now > end:
+		#	self.response.write("Quiz ended")
+		#	return
+
+		sql = "select id, description from Question where quiz_id='%s'"%(zid)
+		cursor.execute(sql)
+		question_data = cursor.fetchall()
+		questions = []
+		for q in question_data:
+			sql = "select id, title, is_true from Answer where question_id='%s'"%(q[0])
+			cursor.execute(sql)
+			answer_data = cursor.fetchall()
+			answers = []
+			for a in answer_data:
+				answer = {
+					'id' : a[0],
+					'title' : a[1],
+					'is_true' : a[2]
+				}
+				answers.append(answer)
+
+			question = {
+				'id' : q[0],
+				'title' : q[1],
+				'answers' : answers
+			}
+			questions.append(question)
+
+        	templates = {
+			'username' : users.get_current_user(),
+			'title' : title,
+			'description' : description,
+			'start' : start,
+			'end' : end,
+			'questions' : questions
+		}
+		#self.response.write(json.dumps(templates))
+		get_template = JINJA_ENVIRONMENT.get_template('templates/quiz_summary.html')
+		self.response.write(get_template.render(templates))
 
 app = webapp2.WSGIApplication([
 	('/Test', Test),
@@ -338,6 +429,8 @@ app = webapp2.WSGIApplication([
 	('/ManageQuestionHandler', ManageQuestionHandler),
 	('/Quiz', Quiz),
 	('/AnsQuiz', AnsQuiz),
+	('/QuizSummary', QuizSummary),
+	('/QuizResult', QuizResult),
 	(decorator.callback_path, decorator.callback_handler())
 ], debug=True)
 app = SessionMiddleware(app, cookie_key=str(os.urandom(64)))

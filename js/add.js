@@ -101,7 +101,7 @@ function SendEventData() {
 		success: function(result) {
 			alert(result);
 			result = JSON.parse(result);
-			window.location.replace("/ModifyQuiz?id=" + result.id);
+			window.location.replace("/QuizSummary?id=" + result.id);
 		}
 	});
 }
@@ -134,7 +134,7 @@ function SendModifyEventData() {
 		success: function(result) {
 			alert(result);
 			result = JSON.parse(result);
-			window.location.replace("/ModifyQuiz?id=" + result.id);
+			window.location.replace("/QuizSummary?id=" + result.id);
 		}
 	});
 }
