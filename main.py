@@ -41,12 +41,13 @@ INSTANCE_NAME = "gcdc2013-easyquiz:quiz1"
 DATABASE = "quizdb"
 
 decorator = OAuth2Decorator(
-	client_id='811273628883-maqeqibrglovtamcnv6jdvijsfs5go2m.apps.googleusercontent.com',
-        client_secret='ON_nhoYc613SI2WUJlHE8wL6',
-	scope='https://www.googleapis.com/auth/drive'
+	client_id='981805140817.apps.googleusercontent.com',
+        client_secret='YT2KhOg3nPgXUeV60wA3iAwS',
+	scope='https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/calendar'
 )
 
 service = build('drive', 'v2')
+calendar_service = build('calendar','v3')
 
 MIME_FOLDER = "application/vnd.google-apps.folder"
 MIME_DOC = "application/vnd.google-apps.document"
@@ -98,6 +99,7 @@ class CreateQuizHandler(webapp2.RequestHandler):
 		end_date = data['enddate']
 		location = data['location']
 
+		http = decorator.http()
 		con = rdbms.connect(instance=INSTANCE_NAME, database=DATABASE)
     		cursor = con.cursor()
         	sql="insert into Quiz (title, description, start, end, address, owner) values ('%s', '%s', '%s', '%s', '%s', '%s')"%(title, description, start_date, end_date, location, users.get_current_user().email().lower())
@@ -108,12 +110,26 @@ class CreateQuizHandler(webapp2.RequestHandler):
 		cursor.execute(sql)
 		zid = cursor.fetchall()[0][0]
 
+		event = {
+			'summary': title,
+			'location': location,
+			'start': {
+				'dateTime': start_date.replace(' ', 'T') + ":00.000+07:00",
+				'timeZone': 'Asia/Bangkok'
+			},
+			'end': {
+				'dateTime': end_date.replace(' ', 'T') + ":00.000+07:00",
+				'timeZone': 'Asia/Bangkok'
+			}
+		}
+		result = calendar_service.events().insert(calendarId='primary', body=event).execute(http=http)
+
 		con.close()
 
 		result = {
-				'status' : 'OK',
-				'id' : str(zid)
-			}
+			'status' : 'OK',
+			'id' : str(zid)
+		}
 
 		self.response.write(json.dumps(result))
 
