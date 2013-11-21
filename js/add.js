@@ -99,7 +99,7 @@ function SendEventData() {
 		data : { 'data' : JSON.stringify(event_data) },	
 		cache : false,
 		success: function(result) {
-			alert(result);
+			alert("Add Event Successfully");
 			result = JSON.parse(result);
 			window.location.replace("/QuizSummary?id=" + result.id);
 		}
@@ -132,7 +132,7 @@ function SendModifyEventData() {
 		},	
 		cache : false,
 		success: function(result) {
-			alert(result);
+			alert("Modify Event Successfully");
 			result = JSON.parse(result);
 			window.location.replace("/QuizSummary?id=" + result.id);
 		}
@@ -176,7 +176,7 @@ function SendQuestionData() {
 		},	
 		cache : false,
 		success: function(result) {
-			alert(result);
+			alert("Add Question Successfully");
 		}
 	});
 }

@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="stylesheet" type="text/css" href="css/leaflet.css">
 	<link rel="stylesheet" type="text/css" href="css/summernote.css">
 	<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="js/json2.js"></script>
@@ -15,21 +16,19 @@
 	<script type="text/javascript" src="js/moment.min.js"></script>
 	<script type="text/javascript" src="js/gmap3.min.js"></script>
 	<script type="text/javascript" src="js/summernote.min.js"></script>
+	<script type="text/javascript" src="js/leaflet.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
 	<script type="text/javascript" src="js/add.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 	<div class="row nav-bar">
-	  <div class="col-xs-2 logobar">
+	  <div class="col-md-2 logobar">
 	  	<div class="logo"><a href="/"><img src="images/icons/check.png"> Easy Quiz</a></div>
 	  </div>
-	  <div class="col-xs-10">
+	  <div class="col-md-10">
 	  	<div>
 	  		<div class="row profile">
-			  	<div class="col-xs-10 right">
-			  		<img src="images/people.png" class="profile-img">
-			  	</div>
 			  	<div class="col-xs-2">
 			  		<div style="font-size:0.8em;">Welcome , </div>
 			  		<div>{{username}}</div>
@@ -39,17 +38,17 @@
 	  </div>
 	</div>
 	<div class="row content">
-	  <div class="col-xs-2 menubar">
+	  <div class="col-md-2 menubar">
 	  	<div>
 	  		<ul>
-		  		<li><img src="images/icons/plus.png">Create Quiz</li>
+		  		<li><a href="Create"><img src="images/icons/plus.png">Create Quiz</a></li>
 		  		<li><img src="images/icons/list.png">My Quiz</li>
 		  		<li><img src="images/icons/checkbox.png">My Score</li>
 		  		<li><img src="images/icons/logout.png">Logout</li>
 	  		</ul>
 	  	</div>
 	  </div>
-	  <div class="col-xs-10">
+	  <div class="col-md-10">
 	  	<div>
 	  		<div class="block">
 		  		<div class="block-title">Create Quiz : Description</div>
