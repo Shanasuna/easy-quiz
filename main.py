@@ -408,7 +408,7 @@ class QuizSummary(webapp2.RequestHandler):
 			questions.append(question)
 
         	templates = {
-			'username' : users.get_current_user(),
+			'id' : zid,
 			'title' : title,
 			'description' : description,
 			'start' : start,

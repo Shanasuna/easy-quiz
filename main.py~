@@ -41,8 +41,8 @@ INSTANCE_NAME = "gcdc2013-easyquiz:quiz1"
 DATABASE = "quizdb"
 
 decorator = OAuth2Decorator(
-	client_id='981805140817.apps.googleusercontent.com',
-        client_secret='YT2KhOg3nPgXUeV60wA3iAwS',
+	client_id='808381301213-rgl6qcaiabgqtg58aihcmth32ud9purv.apps.googleusercontent.com',
+        client_secret='l7T9EGbQ4q9tfhRvRLm4VB0D',
 	scope='https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/calendar'
 )
 
