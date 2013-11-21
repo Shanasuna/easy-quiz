@@ -119,7 +119,9 @@ function SendModifyEventData() {
 		description : description, 
 		startdate : startdate,
 		enddate : enddate,
-		location : location
+		location : location,
+		lat: lat,
+		lng: lng,
 	};
 	console.log(event_data);
 
